@@ -63,7 +63,6 @@ void printPlayerStatus(void)
 	{
 		printf("%s : pos %i, coin %i, status %s\n", 
 		player_name[i], player_position[i], player_coin[i], player_statusString[player_status[i]]);
-		printPlayerPosition(i);
 	}
 	printf("-----------------\n");
 }
@@ -73,7 +72,7 @@ void checkDie(void)
 	int i;
 	for (i=0; i<N_PLAYER; i++)
 		if(board_getBoardStatus(player_position[i]) == BOARDSTATUS_NOK)
-		  player_status[i] = PLAYERSTATUS_DIE;
+		player_status[i] = PLAYERSTATUS_DIE;
 }
 
 
@@ -135,13 +134,13 @@ int main(int argc, char *argv[])
 	  if (player_position[turn] >= N_BOARD)
 	  	 player_position[turn] = N_BOARD-1;
 	  
-	  if (player_position[turn] == N_BOARD)
+	  if (player_position[turn] == N_BOARD-1)
 	  	 player_status[turn] = PLYAERSTATUS_END;
 	  	 
 	  printf("Die result : %i, %s moved to %i\n", step, player_name[turn], player_position[turn]);
 
 	  //2-4. 동전 줍기
-	  coinResult = board_getBoardCoin(pos); //내가 동전을 얼마나 주웠는지 저장
+	  coinResult = board_getBoardCoin(player_position[turn]); //내가 동전을 얼마나 주웠는지 저장
 	  player_coin[turn] += coinResult;
 	  printf("-> Lucky! %s got %i coin!\n", player_name[turn], player_coin[turn]);
 	  
@@ -158,9 +157,8 @@ int main(int argc, char *argv[])
 	  }
 	      
     }while(!game_end());
-    
     printf("GAME END!\n");
-    printf("%i player are alive! winner is %s\n", player_status[0], player_name);
+    
 	//3. 정리 (승자 계산, 출력 등)
 	
 	int getAlivePlayer(void)
@@ -169,11 +167,12 @@ int main(int argc, char *argv[])
 		int cnt = 0;
 		for(i=0; i<N_PLAYER; i++)
 		{
-			if(player_status[i]==PLYAERSTATUS_END)
+			if(player_status[i] == PLYAERSTATUS_END)
 			cnt++;
 		}
 		return cnt;
 	}
+	
 	
 	int getWinner(void)
 	{
@@ -192,6 +191,7 @@ int main(int argc, char *argv[])
 		return winner;
 	}
 	
+	printf("%i player are alive! winner is %s\n", getAlivePlayer(), player_name[getWinner()]);
 	return 0;
 }
 
@@ -210,3 +210,4 @@ int game_end(void)
 		}
 		return flag_end;
 	}
+	
