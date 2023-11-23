@@ -135,10 +135,13 @@ int main(int argc, char *argv[])
 	  	 player_position[turn] = N_BOARD-1;
 	  
 	  if (player_position[turn] == N_BOARD-1)
-	  	 player_status[turn] = PLYAERSTATUS_END;
+	  	player_status[turn] = PLYAERSTATUS_END;
 	  	 
 	  printf("Die result : %i, %s moved to %i\n", step, player_name[turn], player_position[turn]);
-
+	  
+	  if (player_position[turn] == N_BOARD-1)
+	    printf("%s reached to the end!! (coin : %i)\n", player_name[turn], player_coin[turn]);
+	  
 	  //2-4. 동전 줍기
 	  coinResult = board_getBoardCoin(player_position[turn]); //내가 동전을 얼마나 주웠는지 저장
 	  player_coin[turn] += coinResult;
@@ -157,8 +160,7 @@ int main(int argc, char *argv[])
 	  }
 	      
     }while(!game_end());
-    printf("GAME END!\n");
-    
+
 	//3. 정리 (승자 계산, 출력 등)
 	
 	int getAlivePlayer(void)
@@ -190,7 +192,7 @@ int main(int argc, char *argv[])
 		}
 		return winner;
 	}
-	
+	printf("GAME END!\n");
 	printf("%i player are alive! winner is %s\n", getAlivePlayer(), player_name[getWinner()]);
 	return 0;
 }
